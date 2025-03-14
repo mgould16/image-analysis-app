@@ -17,7 +17,6 @@ export default function Home() {
 
     const handleUpload = async () => {
         try {
-            // Request a signed upload from the server
             const signResponse = await fetch("/api/sign-upload", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" }
@@ -74,11 +73,39 @@ export default function Home() {
 
             const data = await response.json();
             console.log("✅ Retrieved Image Details:", data);
-            setImageDetails(data);
+
+            let structuredTags = {};
+            Object.entries(data.tags).forEach(([model, tags]) => {
+                if (Array.isArray(tags)) {
+                    // ✅ Standard AI models (Google, AWS, Imagga)
+                    structuredTags[model] = tags.map(tag => ({
+                        name: tag.name,
+                        confidence: tag.confidence
+                    }));
+                } else if (typeof tags === "object") {
+                    // ✅ Cloudinary AI Vision models (COCO, LVIS, etc.)
+                    structuredTags[model] = Object.entries(tags).flatMap(([tagName, tagArray]) =>
+                        tagArray.map(tag => ({
+                            name: tagName, // Extract category name from object key
+                            confidence: tag.confidence ? tag.confidence.toFixed(2) : "N/A"
+                        }))
+                    );
+                }
+            });
+
+            setImageDetails({
+                ...data,
+                tags: structuredTags
+            });
+
         } catch (error) {
             console.error("❌ Error fetching image details:", error);
         }
     };
+
+
+
+
 
     return (
         <div className="container text-center mt-5">
@@ -97,31 +124,27 @@ export default function Home() {
                             <p><strong>Public ID:</strong> {imageDetails.public_id}</p>
 
                             {imageDetails.tags && (
-                                <div className="mt-4">
-                                    <h3 className="mb-3">AI-Generated Tags</h3>
-
-                                    <div className="row">
-                                        {Object.entries(imageDetails.tags).map(([model, tags]) => (
-                                            <div key={model} className="col-md-4 mb-4">
-                                                <div className="card shadow-sm">
-                                                    <div className="card-body">
-                                                        <h5 className="card-title text-center">{model.replace("_", " ").toUpperCase()}</h5>
-                                                        <div className="d-flex flex-wrap justify-content-center">
-                                                            {tags.length > 0 ? (
-                                                                tags.map((tag, index) => (
-                                                                    <span key={index} className="badge bg-primary m-1">
-                                                                        {tag.name} <span className="badge bg-light text-dark">{tag.confidence}%</span>
-                                                                    </span>
-                                                                ))
-                                                            ) : (
-                                                                <p className="text-muted">No tags found.</p>
-                                                            )}
-                                                        </div>
+                                <div className="row">
+                                    {Object.entries(imageDetails.tags).map(([model, tags]) => (
+                                        <div key={model} className="col-md-2 mb-4">
+                                            <div className="card shadow-sm">
+                                                <div className="card-body">
+                                                    <h5 className="card-title text-center">{model.replace("_", " ").toUpperCase()}</h5>
+                                                    <div className="d-flex flex-wrap justify-content-center">
+                                                        {tags.length > 0 ? (
+                                                            tags.map((tag, index) => (
+                                                                <span key={index} className="badge bg-primary m-1">
+                                                                    {tag.name} <span className="badge bg-light text-dark">{tag.confidence}%</span>
+                                                                </span>
+                                                            ))
+                                                        ) : (
+                                                            <p className="text-muted">No tags found.</p>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
-                                        ))}
-                                    </div>
+                                        </div>
+                                    ))}
                                 </div>
                             )}
                         </div>
