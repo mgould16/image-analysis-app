@@ -11,7 +11,7 @@ cloudinary.v2.config({
 
 cloudinary.v2.api
 .update("signed_upload_demo_uw/f7igl7q0rat0mvh4gciu", 
-  { categorization: "google_tagging",
+  { detection: "cld-fashion, unidet, coco_v2, lvis",
   	auto_tagging: 0.3,
   	
     })

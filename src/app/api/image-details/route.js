@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import cloudinary from "cloudinary";
 
-// Load environment variables
+// Configure Cloudinary
 cloudinary.v2.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -19,42 +19,71 @@ export async function POST(req) {
         console.log("✅ Extracted public_id:", publicId);
 
         // ✅ Apply AI Auto-Tagging using `update` API
-        const applyAutoTagging = async (categorization) => {
+        const applyAIModel = async (type, model) => {
             try {
                 const result = await cloudinary.v2.api.update(publicId, {
-                    categorization: categorization,
+                    [type]: model,
                     auto_tagging: 0.3 // Confidence threshold
                 });
 
-                console.log(`✅ Auto-tagging applied successfully for ${categorization}:`, result.info.categorization);
+                console.log(`✅ Full API Response for ${model}:`, JSON.stringify(result, null, 2));
 
-                // ✅ Extract only the tag names, handling object-based tags
-                return result.info?.categorization?.[categorization]?.data.map(tag => ({
-                    name: typeof tag.tag === "object" ? tag.tag.en : tag.tag, // Handle multi-language objects
+                if (type === "detection") {
+                    // ✅ Ensure COCO v2 tags are extracted correctly
+                    const detectedTags = result.info?.detection?.object_detection?.data?.[model]?.tags || {};
+
+                    console.log(`✅ Extracted tags for ${model}:`, detectedTags);
+
+                    return Object.entries(detectedTags).flatMap(([tagName, tagArray]) =>
+                        tagArray.map(tag => ({
+                            name: tagName,
+                            confidence: tag.confidence ? tag.confidence.toFixed(2) : "N/A"
+                        }))
+                    ) || [];
+                }
+
+                // ✅ Extract tags for categorization models (Google, AWS, Imagga)
+                return result.info?.[type]?.[model]?.data?.map(tag => ({
+                    name: typeof tag.tag === "object" ? tag.tag.en : tag.tag,
                     confidence: tag.confidence.toFixed(2)
                 })) || [];
             } catch (error) {
-                console.error(`❌ Error applying auto-tagging for ${categorization}:`, error.message);
+                console.error(`❌ Error applying ${type} model for ${model}:`, error.message);
                 return [];
             }
         };
 
-        // Apply auto-tagging for Google, AWS, and Imagga separately
-        const googleTags = await applyAutoTagging("google_tagging");
-        const awsTags = await applyAutoTagging("aws_rek_tagging");
-        const imaggaTags = await applyAutoTagging("imagga_tagging");
+
+
+
+
+
+
+
+
+        // ✅ Categorization Models (Google, AWS, Imagga)
+        const categorizationModels = ["google_tagging", "aws_rek_tagging", "imagga_tagging"];
+        let categorizationTags = {};
+        for (const model of categorizationModels) {
+            categorizationTags[model] = await applyAIModel("categorization", model);
+        }
+
+        // ✅ Detection Models (Cloudinary AI Vision)
+        const detectionModels = ["coco_v2", "cld-fashion", "lvis", "unidet"];
+        let detectionTags = {};
+        for (const model of detectionModels) {
+            detectionTags[model] = await applyAIModel("detection", model);
+        }
 
         return NextResponse.json({
             public_id: publicId,
-            secure_url: `https://res.cloudinary.com/markg16/image/upload/${publicId}.jpg`, // Ensure image URL is accessible
-            tags: {
-                google: googleTags,
-                aws: awsTags,
-                imagga: imaggaTags
-            }
+            secure_url: `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${publicId}.jpg`,
+            tags: { ...categorizationTags, ...detectionTags }
         });
     } catch (error) {
         console.error("❌ Server Error:", error.message);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
+
+
