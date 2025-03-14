@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css"; // ✅ Using Bootstrap for styling
 
 export default function Home() {
     const [imageUrl, setImageUrl] = useState(null);
@@ -80,47 +81,47 @@ export default function Home() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-            <h1 className="text-3xl font-bold text-gray-800 mb-6">Upload an Image</h1>
-            <button
-                onClick={handleUpload}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
-            >
+        <div className="container text-center mt-5">
+            <h1 className="mb-4">Upload an Image</h1>
+            <button onClick={handleUpload} className="btn btn-primary mb-4">
                 Upload Image
             </button>
 
             {imageUrl && (
-                <div className="mt-6 flex flex-col items-center">
-                    <img src={imageUrl} alt="Uploaded" className="max-w-md rounded-lg shadow-lg" />
+                <div className="mt-3">
+                    <img src={imageUrl} alt="Uploaded" className="img-fluid rounded shadow-lg mb-3" />
 
                     {imageDetails && (
-                        <div className="mt-6 p-6 bg-white rounded-lg shadow-lg w-full max-w-5xl">
-                            <h3 className="text-xl font-bold mb-4 text-center">Image Details</h3>
-                            <p className="text-center"><strong>Public ID:</strong> {imageDetails.public_id}</p>
+                        <div className="mt-4 p-4 bg-light rounded shadow-lg">
+                            <h3 className="mb-3">Image Details</h3>
+                            <p><strong>Public ID:</strong> {imageDetails.public_id}</p>
 
                             {imageDetails.tags && (
-                                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    {Object.entries(imageDetails.tags).map(([model, tags]) => (
-                                        <div key={model} className="bg-white rounded-lg shadow-md p-4 border">
-                                            <h4 className="font-semibold text-lg uppercase text-gray-700 mb-2 text-center">
-                                                {model.replace("_", " ")}
-                                            </h4>
-                                            <div className="flex flex-wrap gap-2 justify-center">
-                                                {tags.length > 0 ? (
-                                                    tags.map((tag, index) => (
-                                                        <div key={index} className="bg-blue-500 text-white px-3 py-2 rounded-md text-sm flex justify-between items-center">
-                                                            <span>{tag.name}</span>
-                                                            <span className="ml-2 bg-white text-blue-500 px-2 py-1 rounded-md text-xs">
-                                                                {tag.confidence}%
-                                                            </span>
+                                <div className="mt-4">
+                                    <h3 className="mb-3">AI-Generated Tags</h3>
+
+                                    <div className="row">
+                                        {Object.entries(imageDetails.tags).map(([model, tags]) => (
+                                            <div key={model} className="col-md-4 mb-4">
+                                                <div className="card shadow-sm">
+                                                    <div className="card-body">
+                                                        <h5 className="card-title text-center">{model.replace("_", " ").toUpperCase()}</h5>
+                                                        <div className="d-flex flex-wrap justify-content-center">
+                                                            {tags.length > 0 ? (
+                                                                tags.map((tag, index) => (
+                                                                    <span key={index} className="badge bg-primary m-1">
+                                                                        {tag.name} <span className="badge bg-light text-dark">{tag.confidence}%</span>
+                                                                    </span>
+                                                                ))
+                                                            ) : (
+                                                                <p className="text-muted">No tags found.</p>
+                                                            )}
                                                         </div>
-                                                    ))
-                                                ) : (
-                                                    <p className="text-gray-500">No tags found.</p>
-                                                )}
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                         </div>
