@@ -102,6 +102,7 @@
     overflow-x: auto; /* ✅ Allows horizontal scrolling if needed */
     padding-bottom: 20px;
 }
+
 .tag-section {
     background: white;
     padding: 15px;
@@ -118,7 +119,6 @@
     height: auto; /* ✅ Makes height adjust to content */
 }
 
-
 .tag-title {
     font-size: 1.2rem;
     font-weight: bold;
@@ -132,7 +132,6 @@
     width: 100%;
 }
 
-
 .tag-list {
     display: flex;
     flex-wrap: wrap;
@@ -140,6 +139,7 @@
     gap: 5px;
 }
 
+/* Loading Spinner */
 .loading-container {
     display: flex;
     flex-direction: column;
@@ -189,6 +189,13 @@
     margin-top: 10px;
 }
 
+/* Public ID Style */
+.public-id {
+    font-size: 1rem;
+    font-weight: normal;
+    color: #ddd;
+}
+
 /* Download CSV Button */
 .download-btn {
     background-color: #28a745;
@@ -206,7 +213,7 @@
     background-color: #218838;
 }
 
-/* Style for individual tags */
+/* Improved Badge Styling */
 .badge {
     display: flex;
     align-items: center;
@@ -220,7 +227,7 @@
     background-color: #007bff;
 }
 
-/* Style for the confidence score */
+/* Confidence Score Styling */
 .badge .confidence-score {
     background: white;
     color: black;
@@ -230,5 +237,3 @@
     font-weight: bold;
     margin-left: 5px; /* ✅ Adds spacing from the tag */
 }
-
-
