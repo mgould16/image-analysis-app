@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
-import "bootstrap/dist/css/bootstrap.min.css"; // ✅ Using Bootstrap for styling
+import "bootstrap/dist/css/bootstrap.min.css"; // ✅ Bootstrap for styling
 
 export default function Home() {
     const [imageUrl, setImageUrl] = useState(null);
     const [imageDetails, setImageDetails] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [expanded, setExpanded] = useState({}); // ✅ Tracks expanded models
 
     useEffect(() => {
         const script = document.createElement("script");
@@ -23,11 +24,7 @@ export default function Home() {
             });
 
             const { signature, timestamp, apiKey, cloudName } = await signResponse.json();
-
-            if (!signature) {
-                console.error("❌ Failed to get a valid signature.");
-                return;
-            }
+            if (!signature) return console.error("❌ Failed to get a valid signature.");
 
             if (window.cloudinary) {
                 const uploadWidget = window.cloudinary.createUploadWidget(
@@ -50,11 +47,10 @@ export default function Home() {
                             const uploadedImageUrl = result.info.secure_url;
                             console.log("✅ Upload Successful! Fetching image details...");
                             setImageUrl(uploadedImageUrl);
-                            fetchImageDetails(uploadedImageUrl); // ✅ Ensure it's being called
+                            fetchImageDetails(uploadedImageUrl);
                         }
                     }
                 );
-
                 uploadWidget.open();
             } else {
                 console.error("❌ Cloudinary upload widget failed to load.");
@@ -64,9 +60,9 @@ export default function Home() {
         }
     };
 
-
     const fetchImageDetails = async (url) => {
         try {
+            setLoading(true);
             console.log("🟡 Fetching image details for:", url);
 
             const response = await fetch("/api/image-details", {
@@ -78,61 +74,79 @@ export default function Home() {
             const data = await response.json();
             console.log("✅ Retrieved API Response:", data);
 
-            // Store in global variable for debugging
-            window.imageDetails = data;
-
-            // Debugging logs
-            console.log("✅ Stored in window.imageDetails:", window.imageDetails);
-            console.log("✅ Checking COCO Model Data:", window.imageDetails?.detection?.object_detection?.data?.coco);
-            console.log("✅ Checking UNIDET Model Data:", window.imageDetails?.detection?.object_detection?.data?.unidet);
-
             setImageDetails(data);
+            setExpanded({}); // Reset expanded state
         } catch (error) {
             console.error("❌ Error fetching image details:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
-
-
-
-
-
     return (
-        <div className="container text-center mt-5">
-            <h1 className="mb-4">Upload an Image</h1>
-            <button onClick={handleUpload} className="btn btn-primary mb-4">
-                Upload Image
-            </button>
+        <div className="container-fluid page-container">
+            {/* Hero Section */}
+            <div className="hero-section">
+                <h2>AI Image Tagging</h2>
+                <p>Automatically tag images using AI-powered object detection models. Try multiple AI tagging options effortlessly!</p>
+            </div>
 
+            {/* Upload Box */}
+            <div className="upload-container">
+                <div className="upload-box">
+                    <img src="/upload-icon.png" alt="Upload" className="upload-icon" />
+                    <h3>Upload an Image to Tag</h3>
+                    <button className="upload-btn" onClick={handleUpload}>Upload Image</button>
+                    <p className="drag-text">Or drag your images here</p>
+                </div>
+            </div>
+
+            {/* Show Uploaded Image & Details */}
             {imageUrl && (
-                <div className="mt-3">
-                    <img src={imageUrl} alt="Uploaded" className="img-fluid rounded shadow-lg mb-3" />
+                <div className="image-section">
+                    <img src={imageUrl} alt="Uploaded Image" className="uploaded-image" />
+                    <h4 className="image-description">Detected Objects & Tags</h4>
 
-                    {imageDetails && (
-                        <div className="mt-4 p-4 bg-light rounded shadow-lg">
-                            <h3 className="mb-3">Image Details</h3>
-                            <p><strong>Public ID:</strong> {imageDetails.public_id}</p>
+                    {loading && (
+                        <div className="loading-container">
+                            <div className="spinner"></div>
+                            <p>Loading tags...</p>
+                        </div>
+                    )}
 
-                            {imageDetails.tags && (
-                                <div className="mt-4 overflow-auto d-flex flex-nowrap">
-                                    {Object.entries(imageDetails.tags).map(([model, tags]) => (
-                                        <div key={model} className="p-3 mx-2 bg-white border rounded shadow-sm">
-                                            <h5 className="text-center mb-3">{model.replace("_", " ").toUpperCase()}</h5>
-                                            <div className="d-flex flex-wrap justify-content-center">
-                                                {tags.length > 0 ? (
-                                                    tags.map((tag, index) => (
-                                                        <span key={index} className="badge bg-primary m-1">
-                                                            {tag.name} <span className="badge bg-light text-dark">{tag.confidence}%</span>
-                                                        </span>
-                                                    ))
-                                                ) : (
-                                                    <p className="text-muted">No tags found.</p>
-                                                )}
-                                            </div>
+                    {!loading && imageDetails && (
+                        <div className="tag-container">
+                            {Object.entries(imageDetails.tags).map(([model, tags]) => {
+                                const isExpanded = expanded[model] || false;
+                                const displayedTags = isExpanded ? tags : tags.slice(0, 20);
+
+                                return (
+                                    <div key={model} className="tag-section">
+                                        <h5 className="tag-title">{model.replace("_", " ").toUpperCase()}</h5>
+                                        <div className="tag-list">
+                                            {displayedTags.map((tag, index) => (
+                                                <span key={index} className="badge bg-primary m-1">
+                                                    {tag.name}
+                                                    <span className="badge bg-light text-dark"> {tag.confidence}</span>
+                                                </span>
+                                            ))}
                                         </div>
-                                    ))}
-                                </div>
-                            )}
+
+                                        {/* Show More Button */}
+                                        {tags.length > 20 && (
+                                            <button
+                                                className="show-more-btn"
+                                                onClick={() => setExpanded(prev => ({
+                                                    ...prev,
+                                                    [model]: !prev[model]
+                                                }))}
+                                            >
+                                                {isExpanded ? "Show Less" : "Show More"}
+                                            </button>
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
                 </div>
