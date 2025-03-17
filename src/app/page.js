@@ -121,7 +121,7 @@ export default function Home() {
             {/* Upload Box */}
             <div className="upload-container">
                 <div className="upload-box">
-                    <img src="/upload-icon.png" alt="Upload" className="upload-icon" />
+                    <img src="/cld-logo.png" alt="Upload" className="upload-icon" />
                     <h3>Upload an Image to Tag</h3>
                     <button className="upload-btn" onClick={handleUpload}>Upload Image</button>
                     <p className="drag-text">Or drag your images here</p>
@@ -154,12 +154,16 @@ export default function Home() {
                                     <div key={model} className="tag-section">
                                         <h5 className="tag-title">{model.replace("_", " ").toUpperCase()}</h5>
                                         <div className="tag-list">
-                                            {displayedTags.map((tag, index) => (
-                                                <span key={index} className="badge bg-primary m-1">
-                                                    {tag.name}
-                                                    <span className="badge bg-light text-dark"> {tag.confidence}</span>
-                                                </span>
-                                            ))}
+                                            {tags.length > 0 ? (
+                                                displayedTags.map((tag, index) => (
+                                                    <span key={index} className="badge bg-primary m-1">
+                                                        {tag.name}
+                                                        <span className="confidence-score">{tag.confidence}</span>
+                                                    </span>
+                                                ))
+                                            ) : (
+                                                <p className="no-tags-text">No tags found for this model</p>
+                                            )}
                                         </div>
 
                                         {/* Show More Button */}
