@@ -30,14 +30,14 @@ export async function POST(req) {
 
                 if (type === "detection") {
                     // ✅ Ensure COCO v2 tags are extracted correctly
-                    const detectedTags = result.info?.detection?.object_detection?.data?.[model]?.tags || {};
+                    const detectedTags = result.info?.detection?.object_detection?.data?.coco?.tags || {};
 
                     console.log(`✅ Extracted tags for ${model}:`, detectedTags);
 
                     return Object.entries(detectedTags).flatMap(([tagName, tagArray]) =>
                         tagArray.map(tag => ({
                             name: tagName,
-                            confidence: tag.confidence ? tag.confidence.toFixed(2) : "N/A"
+                            confidence: tag.confidence ? (tag.confidence * 100).toFixed(2) + "%" : "N/A"
                         }))
                     ) || [];
                 }
@@ -45,21 +45,13 @@ export async function POST(req) {
                 // ✅ Extract tags for categorization models (Google, AWS, Imagga)
                 return result.info?.[type]?.[model]?.data?.map(tag => ({
                     name: typeof tag.tag === "object" ? tag.tag.en : tag.tag,
-                    confidence: tag.confidence.toFixed(2)
+                    confidence: (tag.confidence * 100).toFixed(2) + "%"
                 })) || [];
             } catch (error) {
                 console.error(`❌ Error applying ${type} model for ${model}:`, error.message);
                 return [];
             }
         };
-
-
-
-
-
-
-
-
 
         // ✅ Categorization Models (Google, AWS, Imagga)
         const categorizationModels = ["google_tagging", "aws_rek_tagging", "imagga_tagging"];
@@ -69,21 +61,24 @@ export async function POST(req) {
         }
 
         // ✅ Detection Models (Cloudinary AI Vision)
-        const detectionModels = ["coco_v2", "cld-fashion", "lvis", "unidet"];
+        const detectionModels = ["coco", "cld-fashion", "lvis", "unidet"];
         let detectionTags = {};
         for (const model of detectionModels) {
             detectionTags[model] = await applyAIModel("detection", model);
         }
 
-        return NextResponse.json({
+        // ✅ Log the final API response for debugging
+        const finalResponse = {
             public_id: publicId,
             secure_url: `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${publicId}.jpg`,
             tags: { ...categorizationTags, ...detectionTags }
-        });
+        };
+        
+        console.log("🚀 Final API Response:", JSON.stringify(finalResponse, null, 2));
+
+        return NextResponse.json(finalResponse);
     } catch (error) {
         console.error("❌ Server Error:", error.message);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
-
-
