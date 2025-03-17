@@ -48,8 +48,9 @@ export default function Home() {
                     async (error, result) => {
                         if (!error && result.event === "success") {
                             const uploadedImageUrl = result.info.secure_url;
+                            console.log("✅ Upload Successful! Fetching image details...");
                             setImageUrl(uploadedImageUrl);
-                            fetchImageDetails(uploadedImageUrl);
+                            fetchImageDetails(uploadedImageUrl); // ✅ Ensure it's being called
                         }
                     }
                 );
@@ -63,8 +64,11 @@ export default function Home() {
         }
     };
 
+
     const fetchImageDetails = async (url) => {
         try {
+            console.log("🟡 Fetching image details for:", url);
+
             const response = await fetch("/api/image-details", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -72,36 +76,22 @@ export default function Home() {
             });
 
             const data = await response.json();
-            console.log("✅ Retrieved Image Details:", data);
+            console.log("✅ Retrieved API Response:", data);
 
-            let structuredTags = {};
-            Object.entries(data.tags).forEach(([model, tags]) => {
-                if (Array.isArray(tags)) {
-                    // ✅ Standard AI models (Google, AWS, Imagga)
-                    structuredTags[model] = tags.map(tag => ({
-                        name: tag.name,
-                        confidence: tag.confidence
-                    }));
-                } else if (typeof tags === "object") {
-                    // ✅ Cloudinary AI Vision models (COCO, LVIS, etc.)
-                    structuredTags[model] = Object.entries(tags).flatMap(([tagName, tagArray]) =>
-                        tagArray.map(tag => ({
-                            name: tagName, // Extract category name from object key
-                            confidence: tag.confidence ? tag.confidence.toFixed(2) : "N/A"
-                        }))
-                    );
-                }
-            });
+            // Store in global variable for debugging
+            window.imageDetails = data;
 
-            setImageDetails({
-                ...data,
-                tags: structuredTags
-            });
+            // Debugging logs
+            console.log("✅ Stored in window.imageDetails:", window.imageDetails);
+            console.log("✅ Checking COCO Model Data:", window.imageDetails?.detection?.object_detection?.data?.coco);
+            console.log("✅ Checking UNIDET Model Data:", window.imageDetails?.detection?.object_detection?.data?.unidet);
 
+            setImageDetails(data);
         } catch (error) {
             console.error("❌ Error fetching image details:", error);
         }
     };
+
 
 
 
@@ -124,24 +114,20 @@ export default function Home() {
                             <p><strong>Public ID:</strong> {imageDetails.public_id}</p>
 
                             {imageDetails.tags && (
-                                <div className="row">
+                                <div className="mt-4 overflow-auto d-flex flex-nowrap">
                                     {Object.entries(imageDetails.tags).map(([model, tags]) => (
-                                        <div key={model} className="col-md-2 mb-4">
-                                            <div className="card shadow-sm">
-                                                <div className="card-body">
-                                                    <h5 className="card-title text-center">{model.replace("_", " ").toUpperCase()}</h5>
-                                                    <div className="d-flex flex-wrap justify-content-center">
-                                                        {tags.length > 0 ? (
-                                                            tags.map((tag, index) => (
-                                                                <span key={index} className="badge bg-primary m-1">
-                                                                    {tag.name} <span className="badge bg-light text-dark">{tag.confidence}%</span>
-                                                                </span>
-                                                            ))
-                                                        ) : (
-                                                            <p className="text-muted">No tags found.</p>
-                                                        )}
-                                                    </div>
-                                                </div>
+                                        <div key={model} className="p-3 mx-2 bg-white border rounded shadow-sm">
+                                            <h5 className="text-center mb-3">{model.replace("_", " ").toUpperCase()}</h5>
+                                            <div className="d-flex flex-wrap justify-content-center">
+                                                {tags.length > 0 ? (
+                                                    tags.map((tag, index) => (
+                                                        <span key={index} className="badge bg-primary m-1">
+                                                            {tag.name} <span className="badge bg-light text-dark">{tag.confidence}%</span>
+                                                        </span>
+                                                    ))
+                                                ) : (
+                                                    <p className="text-muted">No tags found.</p>
+                                                )}
                                             </div>
                                         </div>
                                     ))}
