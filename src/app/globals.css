@@ -179,3 +179,56 @@
 .show-more-btn:hover {
     background-color: #004080;
 }
+
+/* No Tags Found Text */
+.no-tags-text {
+    color: gray;
+    font-size: 1rem;
+    font-style: italic;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Download CSV Button */
+.download-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.download-btn:hover {
+    background-color: #218838;
+}
+
+/* Style for individual tags */
+.badge {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px; /* ✅ Adds spacing between tag name and confidence score */
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+}
+
+/* Style for the confidence score */
+.badge .confidence-score {
+    background: white;
+    color: black;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-left: 5px; /* ✅ Adds spacing from the tag */
+}
+
+

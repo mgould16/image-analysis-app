@@ -7,7 +7,7 @@ export default function Home() {
     const [imageUrl, setImageUrl] = useState(null);
     const [imageDetails, setImageDetails] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [expanded, setExpanded] = useState({}); // ✅ Tracks expanded models
+    const [expanded, setExpanded] = useState({});
 
     useEffect(() => {
         const script = document.createElement("script");
@@ -75,7 +75,7 @@ export default function Home() {
             console.log("✅ Retrieved API Response:", data);
 
             setImageDetails(data);
-            setExpanded({}); // Reset expanded state
+            setExpanded({});
         } catch (error) {
             console.error("❌ Error fetching image details:", error);
         } finally {
@@ -83,18 +83,45 @@ export default function Home() {
         }
     };
 
+    const downloadCSV = () => {
+        if (!imageDetails) return;
+
+        const { public_id, tags } = imageDetails;
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "public_id,model,tag,confidence\n"; // ✅ CSV Header
+
+        Object.entries(tags).forEach(([model, modelTags]) => {
+            modelTags.forEach(({ name, confidence }) => {
+                csvContent += `${public_id},${model},${name},${confidence}\n`;
+            });
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `${public_id}_tags.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div className="container-fluid page-container">
-            {/* Hero Section */}
+            {/* Hero Section with CSV Download Button */}
             <div className="hero-section">
                 <h2>AI Image Tagging</h2>
                 <p>Automatically tag images using AI-powered object detection models. Try multiple AI tagging options effortlessly!</p>
+                {imageDetails && (
+                    <button className="download-btn" onClick={downloadCSV}>
+                        Download CSV
+                    </button>
+                )}
             </div>
 
             {/* Upload Box */}
             <div className="upload-container">
                 <div className="upload-box">
-                    <img src="/upload-icon.png" alt="Upload" className="upload-icon" />
+                    <img src="/cld-logo.png" alt="Upload" className="upload-icon" />
                     <h3>Upload an Image to Tag</h3>
                     <button className="upload-btn" onClick={handleUpload}>Upload Image</button>
                     <p className="drag-text">Or drag your images here</p>
@@ -105,7 +132,10 @@ export default function Home() {
             {imageUrl && (
                 <div className="image-section">
                     <img src={imageUrl} alt="Uploaded Image" className="uploaded-image" />
-                    <h4 className="image-description">Detected Objects & Tags</h4>
+                    <h4 className="image-description">
+                        Detected Objects & Tags  
+                        {imageDetails && <span className="public-id">({imageDetails.public_id})</span>}
+                    </h4>
 
                     {loading && (
                         <div className="loading-container">
@@ -124,12 +154,16 @@ export default function Home() {
                                     <div key={model} className="tag-section">
                                         <h5 className="tag-title">{model.replace("_", " ").toUpperCase()}</h5>
                                         <div className="tag-list">
-                                            {displayedTags.map((tag, index) => (
-                                                <span key={index} className="badge bg-primary m-1">
-                                                    {tag.name}
-                                                    <span className="badge bg-light text-dark"> {tag.confidence}</span>
-                                                </span>
-                                            ))}
+                                            {tags.length > 0 ? (
+                                                displayedTags.map((tag, index) => (
+                                                    <span key={index} className="badge bg-primary m-1">
+                                                        {tag.name}
+                                                        <span className="confidence-score">{tag.confidence}</span>
+                                                    </span>
+                                                ))
+                                            ) : (
+                                                <p className="no-tags-text">No tags found for this model</p>
+                                            )}
                                         </div>
 
                                         {/* Show More Button */}
