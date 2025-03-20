@@ -125,11 +125,6 @@ const FooterNav = ({ title, links }) => (
 const SocialLinks = () => (
     <div className="footer-social">
         <ul className="social-networks">
-            // <li><Link href="https://twitter.com/cloudinary"><span>Twitter</span></Link></li>
-            // <li><Link href="https://www.linkedin.com/company/cloudinary/"><span>LinkedIn</span></Link></li>
-            // <li><Link href="https://www.facebook.com/Cloudinary"><span>Facebook</span></Link></li>
-            // <li><Link href="https://www.instagram.com/cloudinarylife"><span>Instagram</span></Link></li>
-            // <li><Link href="https://www.youtube.com/@Cloudinary"><span>YouTube</span></Link></li>
         </ul>
     </div>
 );
