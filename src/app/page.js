@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // ✅ Bootstrap for styling
 import Image from "next/image";
 
+
 export default function Home() {
     const [imageUrl, setImageUrl] = useState(null);
     const [imageDetails, setImageDetails] = useState(null);
