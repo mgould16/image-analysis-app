@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // ✅ Bootstrap for styling
+import Image from "next/image";
 
 export default function Home() {
     const [imageUrl, setImageUrl] = useState(null);
@@ -121,7 +122,9 @@ export default function Home() {
             {/* Upload Box */}
             <div className="upload-container">
                 <div className="upload-box">
-                    <img src="/cld-logo.png" alt="Upload" className="upload-icon" />
+                    {/* ✅ Replaced <img> with Next.js <Image> for optimization */}
+                    <Image src="/cld-logo.png" alt="Upload" className="upload-icon" width={80} height={50} />
+
                     <h3>Upload an Image to Tag</h3>
                     <button className="upload-btn" onClick={handleUpload}>Upload Image</button>
                     <p className="drag-text">Or drag your images here</p>
