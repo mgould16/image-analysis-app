@@ -92,9 +92,9 @@ export default function Footer() {
                         </div>
                         <div className="col-xs-12 col-sm-6">
                             <ul className="footer-links">
-                                <li><Link href="/https://cloudinary.com/tou">Terms of Use</Link></li>
-                                <li><Link href="/https://cloudinary.com/privacy">Privacy Policy</Link></li>
-                                <li><Link href="/https://cloudinary.com/dmcas">DMCA Notice</Link></li>
+                                <li><Link href="https://cloudinary.com/tou">Terms of Use</Link></li>
+                                <li><Link href="https://cloudinary.com/privacy">Privacy Policy</Link></li>
+                                <li><Link href="https://cloudinary.com/dmcas">DMCA Notice</Link></li>
                             </ul>
                             <div className="copyright">
                                 <p>&copy; {new Date().getFullYear()} Cloudinary. All rights reserved.</p>
