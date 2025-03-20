@@ -23,49 +23,49 @@ export default function Footer() {
 
                             {/* Footer Navigation Sections */}
                             <FooterNav title="Products" links={[
-                                { href: "/https://cloudinary.com/platform", label: "Platform" },
-                                { href: "/https://cloudinary.com/products/image", label: "Image" },
-                                { href: "/https://cloudinary.com/products/video", label: "Video" },
-                                { href: "/https://cloudinary.com/products/digital_asset_management", label: "DAM" },
-                                { href: "/https://cloudinary.com/demos", label: "Demos" },
-                                { href: "/https://cloudinary.com/pricing", label: "Pricing" },
-                                { href: "/https://cloudinary.com/faq", label: "FAQ" }
+                                { href: "https://cloudinary.com/platform", label: "Platform" },
+                                { href: "https://cloudinary.com/products/image", label: "Image" },
+                                { href: "https://cloudinary.com/products/video", label: "Video" },
+                                { href: "https://cloudinary.com/products/digital_asset_management", label: "DAM" },
+                                { href: "https://cloudinary.com/demos", label: "Demos" },
+                                { href: "https://cloudinary.com/pricing", label: "Pricing" },
+                                { href: "https://cloudinary.com/faq", label: "FAQ" }
                             ]} />
 
                             <FooterNav title="Solutions" links={[
-                                { href: "/https://cloudinary.com/solutions/ecommerce", label: "E-commerce" },
-                                { href: "/https://cloudinary.com/solutions/retail", label: "Retail" },
-                                { href: "/https://cloudinary.com/solutions/industries/media_entertainment", label: "Media & Entertainment" },
-                                { href: "/https://cloudinary.com/solutions/industries/travel_hospitality", label: "Travel & Hospitality" },
-                                { href: "/https://cloudinary.com/solutions/industries/cloudinary-for-nonprofits", label: "Non-Profits" },
-                                { href: "/https://cloudinary.com/customers", label: "Our Customers" },
-                                { href: "/https://cloudinary.com/resources", label: "Resource Library" }
+                                { href: "https://cloudinary.com/solutions/ecommerce", label: "E-commerce" },
+                                { href: "https://cloudinary.com/solutions/retail", label: "Retail" },
+                                { href: "https://cloudinary.com/solutions/industries/media_entertainment", label: "Media & Entertainment" },
+                                { href: "https://cloudinary.com/solutions/industries/travel_hospitality", label: "Travel & Hospitality" },
+                                { href: "https://cloudinary.com/solutions/industries/cloudinary-for-nonprofits", label: "Non-Profits" },
+                                { href: "https://cloudinary.com/customers", label: "Our Customers" },
+                                { href: "https://cloudinary.com/resources", label: "Resource Library" }
                             ]} />
 
                             <FooterNav title="Developers" links={[
-                                { href: "/https://cloudinary.com/image-api", label: "Image API" },
-                                { href: "/https://cloudinary.com/video_api", label: "Video API" },
-                                { href: "https://cloudinary.com/developers", label: "Getting Started" },
-                                { href: "/https://cloudinary.com/documentation", label: "Documentation" },
-                                { href: "/https://cloudinary.com/documentation/cloudinary_sdks", label: "SDKs" },
-                                { href: "/https://cloudinary.com/addons", label: "Add-Ons" },
-                                { href: "/https://cloudinary.com/podcasts", label: "Podcasts" }
+                                { href: "https://cloudinary.com/image-api", label: "Image API" },
+                                { href: "https://cloudinary.com/video_api", label: "Video API" },
+                                { href: "ttps://cloudinary.com/developers", label: "Getting Started" },
+                                { href: "https://cloudinary.com/documentation", label: "Documentation" },
+                                { href: "https://cloudinary.com/documentation/cloudinary_sdks", label: "SDKs" },
+                                { href: "https://cloudinary.com/addons", label: "Add-Ons" },
+                                { href: "https://cloudinary.com/podcasts", label: "Podcasts" }
                             ]} />
 
                             <FooterNav title="Company" links={[
-                                { href: "/https://cloudinary.com/about", label: "About Us" },
-                                { href: "/https://cloudinary.com/customers", label: "Customers" },
-                                { href: "/https://cloudinary.com/partners", label: "Partners" },
-                                { href: "/https://cloudinary.com/events", label: "Events" },
-                                { href: "/https://cloudinary.com/careers", label: "Careers" },
-                                { href: "/https://cloudinary.com/newsroom", label: "Newsroom" },
+                                { href: "https://cloudinary.com/about", label: "About Us" },
+                                { href: "https://cloudinary.com/customers", label: "Customers" },
+                                { href: "https://cloudinary.com/partners", label: "Partners" },
+                                { href: "https://cloudinary.com/events", label: "Events" },
+                                { href: "https://cloudinary.com/careers", label: "Careers" },
+                                { href: "https://cloudinary.com/newsroom", label: "Newsroom" },
                                 { href: "https://cloudinary.com/blog/", label: "Blog" },
-                                { href: "/https://cloudinary.com/trust", label: "Trust" }
+                                { href: "https://cloudinary.com/trust", label: "Trust" }
                             ]} />
 
                             <FooterNav title="Contact Us" links={[
                                 { href: "https://support.cloudinary.com/hc/en-us", label: "Technical Support" },
-                                { href: "/https://cloudinary.com/contact", label: "Contact Sales" },
+                                { href: "https://cloudinary.com/contact", label: "Contact Sales" },
                                 { href: "https://training.cloudinary.com/", label: "Education & Training" }
                             ]} />
 
