@@ -1,8 +1,10 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
-import "bootstrap/dist/css/bootstrap.min.css"; // ✅ Use Bootstrap instead of Tailwind
+import "bootstrap/dist/css/bootstrap.min.css"; // ✅ Bootstrap for styling
 import "./globals.css";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
+import Footer from "@/components/Footer"; // ✅ Import the Footer component
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -25,6 +27,8 @@ export default function RootLayout({ children }) {
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
                 {children}
                 <SpeedInsights />
+                <Analytics />
+                <Footer /> {/* ✅ Correctly placed Footer component */}
             </body>
         </html>
     );

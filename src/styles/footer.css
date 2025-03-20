@@ -1,0 +1,145 @@
+/* Cloudinary Footer Styles */
+
+#footer {
+  font-family: 'Inter', sans-serif;
+  background-color: #0A2540; /* Replace $color-blue-dk */
+  color: #B3CFFB;
+  padding-top: 75px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+#footer a {
+  color: #B3CFFB;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+#footer a:hover {
+  color: #FFF; /* Replace $color-white-three */
+}
+
+#footer ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+#footer ul li {
+  margin-bottom: 5px;
+}
+
+#footer .footer-seals li {
+  display: block;
+}
+
+#footer .social-networks {
+  margin-top: 15px;
+}
+
+#footer .title {
+  display: block;
+  margin-bottom: 10px;
+  line-height: 28px;
+  font-size: 16px;
+  color: #FFF;
+}
+
+#footer .widgets {
+  display: flex;
+  justify-content: space-between;
+}
+
+#footer .widgets .col {
+  padding: 0 15px;
+  margin-bottom: 30px;
+}
+
+#footer .footer-holder {
+  padding-bottom: 60px;
+}
+
+#footer .footer-bot {
+  padding: 40px 0;
+  background-color: #050D2C; /* Dark blue */
+  color: #B3CFFB;
+  font-size: 14px;
+}
+
+#footer .footer-bot p {
+  margin-bottom: 0;
+}
+
+#footer .footer-bot a {
+  color: #B3CFFB;
+}
+
+#footer .footer-bot a:hover {
+  color: #FFF; /* Replace $color-white-two */
+}
+
+#footer .footer-bot ul li {
+  display: inline-block;
+  margin-left: 15px;
+}
+
+#footer .footer-bot ul.footer-links {
+  text-align: right;
+}
+
+#footer .footer-bot .copyright {
+  text-align: right;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 1200px) {
+  #footer .widgets {
+    flex-wrap: wrap;
+  }
+
+  #footer .widgets .col {
+    max-width: 25%;
+    flex: 1 1 25%;
+  }
+
+  #footer .widgets .col:nth-child(5) {
+    margin-left: 25%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #footer .footer-bot ul.footer-links,
+  #footer .footer-bot .copyright {
+    text-align: center;
+  }
+
+  #footer .footer-bot ul li {
+    margin: 0 7.5px;
+  }
+
+  .footer-seals {
+    margin-bottom: 20px;
+  }
+
+  .footer-seals ul {
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  #footer .widgets .col {
+    max-width: 50%;
+    flex: 1 1 50%;
+  }
+
+  #footer .widgets .col:nth-child(1) {
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+
+  #footer .widgets .col:nth-child(5) {
+    margin-left: 0;
+  }
+}
