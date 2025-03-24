@@ -1,0 +1,45 @@
+/* Cloudinary-Styled 404 Page */
+.not-found-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.not-found-image {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.not-found-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1e293b;
+}
+
+.not-found-text {
+    font-size: 1.2rem;
+    color: #475569;
+    margin-bottom: 20px;
+}
+
+.not-found-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #007aff;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+}
+
+.not-found-button:hover {
+    background-color: #005bb5;
+}
