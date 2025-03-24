@@ -1,8 +1,6 @@
+import "@/styles/not-found.css";
 import Image from "next/image";
 import Link from "next/link";
-import Footer from "@/components/Footer"; // ✅ Ensure Footer is imported
-import "@/styles/not-found.css"; // ✅ Import the styles
-
 
 export default function NotFound() {
     return (
@@ -18,22 +16,17 @@ export default function NotFound() {
                     priority
                 />
 
-                {/* 404 Title */}
                 <h1 className="not-found-title">Page Not Found (404)</h1>
 
-                {/* Message */}
                 <p className="not-found-text">
                     The page you were looking for doesn&#39;t exist. You may have mistyped the address or the page may have moved.
                 </p>
 
-                {/* Go Home Button */}
+                {/* Go Back Button */}
                 <Link href="/" className="not-found-button">
-                    Go Back Home
+                    Go Back
                 </Link>
             </div>
-
-            {/* Footer */}
-            <Footer />
         </div>
     );
 }
