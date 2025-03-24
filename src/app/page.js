@@ -63,27 +63,31 @@ export default function Home() {
     };
 
     const fetchImageDetails = async (url) => {
-        try {
-            setLoading(true);
-            console.log("🟡 Fetching image details for:", url);
+      try {
+        setLoading(true);
+        console.log("🟡 Fetching image details for:", url);
 
-            const response = await fetch("/api/image-details", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ imageUrl: url })
-            });
+        // ✅ Resize before passing to API
+        const optimizedUrl = url.replace("/upload/", "/upload/w_1000,f_auto/");
 
-            const data = await response.json();
-            console.log("✅ Retrieved API Response:", data);
+        const response = await fetch("/api/image-details", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imageUrl: optimizedUrl }),
+        });
 
-            setImageDetails(data);
-            setExpanded({});
-        } catch (error) {
-            console.error("❌ Error fetching image details:", error);
-        } finally {
-            setLoading(false);
-        }
+        const data = await response.json();
+        console.log("✅ Retrieved API Response:", data);
+
+        setImageDetails(data);
+        setExpanded({});
+      } catch (error) {
+        console.error("❌ Error fetching image details:", error);
+      } finally {
+        setLoading(false);
+      }
     };
+
 
     const downloadCSV = () => {
         if (!imageDetails) return;
@@ -135,7 +139,9 @@ export default function Home() {
             {/* Show Uploaded Image & Details */}
             {imageUrl && (
                 <div className="image-section">
-                    <img src={imageUrl} alt="Uploaded Image" className="uploaded-image" />
+                    <div className="uploaded-image-wrapper">
+                      <img src={imageUrl} alt="Uploaded Image" className="uploaded-image" />
+                    </div>
                     <h4 className="image-description">
                         Detected Objects & Tags  
                         {imageDetails && <span className="public-id">({imageDetails.public_id})</span>}
