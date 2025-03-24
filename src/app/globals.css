@@ -39,12 +39,12 @@
   background-color: #101821;
   padding: 20px;
   border-radius: 12px;
-  margin-top: 20px;
+  margin: 20px auto; /* ✅ this will horizontally center the container */
   max-width: 1200px;
   width: 100%;
-  
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
+
 
 .image-and-tags {
   display: flex;
