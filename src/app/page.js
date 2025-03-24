@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -21,32 +20,30 @@ export default function Home() {
     try {
       const signResponse = await fetch("/api/sign-upload", {
         method: "POST",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       });
 
-      const { signature, timestamp, apiKey, cloudName } = await signResponse.json();
-      if (!signature) return console.error("❌ Failed to get a valid signature.");
+      const { cloudName } = await signResponse.json();
 
       if (window.cloudinary) {
         const uploadWidget = window.cloudinary.createUploadWidget(
           {
-            cloudName: cloudName,
+            cloudName,
             uploadSignature: async (callback) => {
               const signRes = await fetch("/api/sign-upload", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" }
+                headers: { "Content-Type": "application/json" },
               });
 
               const { signature, timestamp, apiKey } = await signRes.json();
               callback({ signature, timestamp, api_key: apiKey });
             },
             multiple: false,
-            folder: "signed_upload_demo_uw"
+            folder: "signed_upload_demo_uw",
           },
           async (error, result) => {
             if (!error && result.event === "success") {
               const uploadedImageUrl = result.info.secure_url;
-              console.log("✅ Upload Successful! Fetching image details...");
               setImageUrl(uploadedImageUrl);
               fetchImageDetails(uploadedImageUrl);
             }
@@ -65,11 +62,10 @@ export default function Home() {
     try {
       setLoading(true);
       const optimizedUrl = url.replace("/upload/", "/upload/w_1000,f_auto/");
-
       const response = await fetch("/api/image-details", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageUrl: optimizedUrl, confidence })
+        body: JSON.stringify({ imageUrl: optimizedUrl, confidence }),
       });
 
       const data = await response.json();
@@ -85,13 +81,17 @@ export default function Home() {
   return (
     <div className="container-fluid page-container text-center">
       <h2 className="mb-3">AI Image Tagging</h2>
-      <p className="mb-4">Automatically tag images using AI-powered object detection models. Try multiple AI tagging options effortlessly!</p>
+      <p className="mb-4">
+        Automatically tag images using AI-powered object detection models. Try multiple AI tagging options effortlessly!
+      </p>
 
       <div className="upload-container mb-4">
         <div className="upload-box">
           <img src="/cld-logo.png" alt="Upload" className="upload-icon" />
           <h3>Upload an Image to Tag</h3>
-          <button className="upload-btn" onClick={handleUpload}>Upload Image</button>
+          <button className="upload-btn" onClick={handleUpload}>
+            Upload Image
+          </button>
           <p className="drag-text">Or drag your images here</p>
         </div>
       </div>
@@ -112,60 +112,60 @@ export default function Home() {
       </div>
 
       {imageUrl && (
-        <div className="image-section">
-          <div className="uploaded-image-wrapper">
-            <img src={imageUrl} alt="Uploaded Image" className="uploaded-image" />
-          </div>
-
-          <h4 className="image-description">Detected Objects & Tags ({imageDetails?.public_id})</h4>
-
-          {loading && (
-            <div className="loading-container">
-              <div className="spinner"></div>
-              <p>Loading tags...</p>
+        <div className="result-container">
+          <div className="image-and-tags">
+            <div className="image-container">
+              <img src={imageUrl} alt="Uploaded Image" className="uploaded-image" />
             </div>
-          )}
 
-          {!loading && imageDetails && (
-            <div className="tag-container">
-              {Object.entries(imageDetails.tags).map(([model, tags]) => {
-                const isExpanded = expanded[model] || false;
-                const displayedTags = isExpanded ? tags : tags.slice(0, 20);
+            <div className="tags-container">
+              {loading && (
+                <div className="loading-container">
+                  <div className="spinner"></div>
+                  <p>Loading tags...</p>
+                </div>
+              )}
 
-                return (
-                  <div key={model} className="tag-section">
-                    <h5 className="tag-title">{model.replace("_", " ").toUpperCase()}</h5>
-                    <div className="tag-list">
-                      {tags.length > 0 ? (
-                        displayedTags.map((tag, index) => (
-                          <span key={index} className="badge bg-primary m-1">
-                            {tag.name}
-                            <span className="confidence-score">{tag.confidence}</span>
-                          </span>
-                        ))
-                      ) : (
-                        <p className="no-tags-text">No tags found for this model</p>
+              {!loading && imageDetails && (
+                Object.entries(imageDetails.tags).map(([model, tags]) => {
+                  const isExpanded = expanded[model] || false;
+                  const displayedTags = isExpanded ? tags : tags.slice(0, 10);
+
+                  return (
+                    <div key={model} className="tag-section">
+                      <h5 className="tag-title">{model.replace("_", " ").toUpperCase()}</h5>
+                      <p className="tag-list">
+                        {tags.length > 0 ? (
+                          displayedTags.map((tag, index) => (
+                            <span key={index}>
+                              {tag.name} ({parseFloat(tag.confidence).toFixed(2)}%)
+                              {index < displayedTags.length - 1 ? ", " : ""}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="no-tags-text">No tags found for this model.</span>
+                        )}
+                      </p>
+
+                      {tags.length > 10 && (
+                        <button
+                          className="show-more-btn"
+                          onClick={() =>
+                            setExpanded((prev) => ({
+                              ...prev,
+                              [model]: !prev[model],
+                            }))
+                          }
+                        >
+                          {isExpanded ? "Show Less" : "Show More"}
+                        </button>
                       )}
                     </div>
-
-                    {tags.length > 20 && (
-                      <button
-                        className="show-more-btn"
-                        onClick={() =>
-                          setExpanded(prev => ({
-                            ...prev,
-                            [model]: !prev[model]
-                          }))
-                        }
-                      >
-                        {isExpanded ? "Show Less" : "Show More"}
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
             </div>
-          )}
+          </div>
         </div>
       )}
     </div>

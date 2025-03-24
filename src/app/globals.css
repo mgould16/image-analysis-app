@@ -1,158 +1,101 @@
-/* Page Background */
 .page-container {
-    background: linear-gradient(to bottom, #002D62, #001A33);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-family: "Arial", sans-serif;
-    padding: 20px;
+  background: linear-gradient(to bottom, #002D62, #001A33);
+  min-height: 100vh;
+  color: white;
+  font-family: Arial, sans-serif;
+  padding: 20px;
 }
 
-/* Hero Section */
-.hero-section {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.hero-section h2 {
-    font-size: 2.5rem;
-    font-weight: bold;
-}
-
-.hero-section p {
-    font-size: 1rem;
-    opacity: 0.8;
-    max-width: 600px;
-}
-
-/* Upload Container */
 .upload-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
-/* Upload Box */
 .upload-box {
-    background: #223A5E;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    width: 450px;
+  background: #223A5E;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .upload-icon {
-    width: 50px;
-    margin-bottom: 15px;
+  width: 50px;
+  margin-bottom: 15px;
 }
 
 .upload-btn {
-    background-color: #2E9CCA;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: 0.3s ease;
+  background-color: #2E9CCA;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
 }
 
 .upload-btn:hover {
-    background-color: #1E7EA6;
+  background-color: #1E7EA6;
 }
 
-.drag-text {
-    font-size: 0.9rem;
-    opacity: 0.7;
-    margin-top: 10px;
+.result-container {
+  background-color: #101821;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  max-width: 1200px;
+  width: 100%;
+  
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-/* Image Section */
-.image-section {
-    margin-top: 20px;
-    text-align: center;
+.image-and-tags {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: center; /* Centers horizontally */
+  margin: 0 auto;          /* Adds horizontal centering */
 }
 
-.uploaded-image-wrapper {
-  max-width: 800px;
-  margin: 0 auto;
+.image-container {
+  flex: 1;
+  max-width: 60%;
 }
 
 .uploaded-image {
   width: 100%;
-  height: auto;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.image-description {
-    margin-top: 15px;
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-
-/* Tag Sections */
-.tag-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start; /* ✅ Ensures boxes start at the top */
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
-    max-width: 90vw; /* ✅ Prevents horizontal overflow */
-    overflow-x: auto; /* ✅ Allows horizontal scrolling if needed */
-    padding-bottom: 20px;
+.tags-container {
+  flex: 1;
+  background-color: #223A5E;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  overflow-y: auto;
+  max-height: 600px;
+  color: white;
 }
 
 .tag-section {
-    background: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    min-width: 250px;
-    max-width: 300px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    height: auto; /* ✅ Makes height adjust to content */
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  margin-bottom: 15px;
 }
 
 .tag-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 12px;
-    color: white; /* Ensure it's visible */
-    text-align: center;
-    background: #005A9C; /* A deep blue to match the theme */
-    padding: 10px;
-    border-radius: 6px;
-    display: inline-block;
-    width: 100%;
+  font-weight: bold;
 }
 
-.tag-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 5px;
+.show-more-btn {
+  background-color: #005A9C;
+  color: white;
+  border-radius: 6px;
+  padding: 6px 10px;
+  border: none;
+  cursor: pointer;
 }
 
-/* Loading Spinner */
-.loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    margin-top: 20px;
+.show-more-btn:hover {
+  background-color: #004080;
 }
 
 .spinner {
@@ -165,82 +108,5 @@
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Show More Button */
-.show-more-btn {
-    background-color: #005A9C;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    margin-top: 10px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: 0.3s ease;
-}
-
-.show-more-btn:hover {
-    background-color: #004080;
-}
-
-/* No Tags Found Text */
-.no-tags-text {
-    color: gray;
-    font-size: 1rem;
-    font-style: italic;
-    text-align: center;
-    margin-top: 10px;
-}
-
-/* Public ID Style */
-.public-id {
-    font-size: 1rem;
-    font-weight: normal;
-    color: #ddd;
-}
-
-/* Download CSV Button */
-.download-btn {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    margin-top: 10px;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: 0.3s ease;
-}
-
-.download-btn:hover {
-    background-color: #218838;
-}
-
-/* Improved Badge Styling */
-.badge {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px; /* ✅ Adds spacing between tag name and confidence score */
-    padding: 6px 12px;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: white;
-    background-color: #007bff;
-}
-
-/* Confidence Score Styling */
-.badge .confidence-score {
-    background: white;
-    color: black;
-    padding: 2px 6px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    margin-left: 5px; /* ✅ Adds spacing from the tag */
+  to { transform: rotate(360deg); }
 }
