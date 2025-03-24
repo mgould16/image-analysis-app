@@ -8,7 +8,7 @@ export default function NotFound() {
             <div className="container text-center">
                 {/* Cloudinary 404 Image */}
                 <Image
-                    src="https://res.cloudinary.com/cloudinary-marketing/image/upload/f_auto,q_auto,w_600/v1645793993/404_2x.jpg"
+                    src="https://res.cloudinary.com/cloudinary-marketing/image/upload/f_auto,q_auto,w_300/v1645793993/404_2x.jpg"
                     alt="404 Not Found"
                     width={800}
                     height={400}
