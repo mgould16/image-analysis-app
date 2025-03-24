@@ -10,8 +10,8 @@ export default function NotFound() {
                 <Image
                     src="https://res.cloudinary.com/cloudinary-marketing/image/upload/f_auto,q_auto,w_300/v1645793993/404_2x.jpg"
                     alt="404 Not Found"
-                    width={800}
-                    height={400}
+                    width={300}
+                    height={150}
                     className="not-found-image"
                     priority
                 />
