@@ -1,9 +1,10 @@
-// next.config.mjs
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["cloudinary-res.cloudinary.com"], // ✅ Allow Cloudinary images
+    domains: [
+      "res.cloudinary.com", 
+      "cloudinary-res.cloudinary.com" // ✅ Allow Cloudinary resources
+    ],
   },
 };
 
