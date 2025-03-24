@@ -10,77 +10,77 @@ cloudinary.v2.config({
 
 export async function POST(req) {
   try {
-    const { imageUrl } = await req.json();
+    const { imageUrl, confidence = 0.3 } = await req.json(); // Get dynamic confidence
 
-    // ✅ Optimize image using Cloudinary transformation (downscale if large)
-    const optimizedUrl = imageUrl.replace("/upload/", "/upload/w_1000,f_auto/");
-
-    // Extract public_id from the optimized image URL
-    const urlParts = optimizedUrl.split("/");
+    // Extract public_id from the uploaded image URL
+    const urlParts = imageUrl.split("/");
     const publicId = urlParts.slice(-2).join("/").split(".")[0];
 
-    console.log("✅ Optimized image URL:", optimizedUrl);
     console.log("✅ Extracted public_id:", publicId);
+    console.log("🟡 Confidence threshold:", confidence);
 
     const applyAIModel = async (type, model) => {
       try {
         const result = await cloudinary.v2.api.update(publicId, {
           [type]: model,
-          auto_tagging: 0.3, // Confidence threshold
+          auto_tagging: confidence, // Pass threshold to Cloudinary
         });
 
         console.log(`✅ Full API Response for ${model}:`, JSON.stringify(result, null, 2));
 
+        // Detection (COCO, UNIDET, etc.)
         if (type === "detection") {
-          const detectedTags =
-            result.info?.detection?.object_detection?.data?.[model]?.tags || {};
-
+          const detectedTags = result.info?.detection?.object_detection?.data?.[model]?.tags || {};
           return Object.entries(detectedTags).flatMap(([tagName, tagArray]) =>
-            tagArray.map((tag) => ({
-              name: tagName,
-              confidence: tag.confidence
-                ? (tag.confidence * 100).toFixed(2) + "%"
-                : "N/A",
-            }))
-          );
+            tagArray
+              .filter(tag => tag.confidence >= confidence)
+              .map(tag => ({
+                name: tagName,
+                confidence: tag.confidence ? (tag.confidence * 100).toFixed(2) + "%" : "N/A"
+              }))
+          ) || [];
         }
 
-        // Categorization model tags
-        return (
-          result.info?.[type]?.[model]?.data?.map((tag) => ({
+        // Categorization (Google, AWS, Imagga)
+        return result.info?.[type]?.[model]?.data
+          ?.filter(tag => tag.confidence >= confidence) // Manual filter required
+          .map(tag => ({
             name: typeof tag.tag === "object" ? tag.tag.en : tag.tag,
-            confidence: (tag.confidence * 100).toFixed(2) + "%",
-          })) || []
-        );
+            confidence: (tag.confidence * 100).toFixed(2) + "%"
+          })) || [];
+
       } catch (error) {
         console.error(`❌ Error applying ${type} model for ${model}:`, error.message);
         return [];
       }
     };
 
-    // Categorization Models
+    // Run Categorization Models
     const categorizationModels = ["google_tagging", "aws_rek_tagging", "imagga_tagging"];
-    let categorizationTags = {};
+    const categorizationTags = {};
     for (const model of categorizationModels) {
       categorizationTags[model] = await applyAIModel("categorization", model);
     }
 
-    // Detection Models
+    // Run Detection Models
     const detectionModels = ["coco", "cld-fashion", "lvis", "unidet"];
-    let detectionTags = {};
+    const detectionTags = {};
     for (const model of detectionModels) {
       detectionTags[model] = await applyAIModel("detection", model);
     }
 
-    const finalResponse = {
+    const response = {
       public_id: publicId,
       secure_url: `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${publicId}.jpg`,
-      tags: { ...categorizationTags, ...detectionTags },
+      tags: {
+        ...categorizationTags,
+        ...detectionTags
+      }
     };
 
-    console.log("🚀 Final API Response:", JSON.stringify(finalResponse, null, 2));
+    console.log("🚀 Final API Response:", JSON.stringify(response, null, 2));
+    return NextResponse.json(response);
 
-    return NextResponse.json(finalResponse);
   } catch (error) {
     console.error("❌ Server Error:", error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
