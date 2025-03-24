@@ -23,7 +23,7 @@ export default function NotFound() {
 
                 {/* Message */}
                 <p className="not-found-text">
-                    The page you were looking for doesn't exist. You may have mistyped the address or the page may have moved.
+                    The page you were looking for doesn&#39;t exist. You may have mistyped the address or the page may have moved.
                 </p>
 
                 {/* Go Home Button */}
