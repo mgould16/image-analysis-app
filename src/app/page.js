@@ -101,7 +101,7 @@ export default function Home() {
     <div className="container-fluid page-container text-center">
       <h2 className="mb-3">AI Image Tagging</h2>
       <p className="mb-4">
-        Automatically tag images using AI-powered object detection models. Try multiple AI tagging options effortlessly!
+        !!!Automatically tag images using AI-powered object detection models. Try multiple AI tagging options effortlessly!
       </p>
 
       <div className="d-flex justify-content-center mb-4 gap-4 flex-wrap">
